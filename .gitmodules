@@ -1,3 +1,4 @@
 [submodule "gs_core/third_party/include/gs"]
 	path = gs_core/third_party/include/gs
 	url = git@github.com:TimeTravelerFromNow/gs_24.git
+	branch = compatible_for_editor
