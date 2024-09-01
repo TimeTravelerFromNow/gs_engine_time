@@ -280,13 +280,13 @@ void gui_button_cb(struct gs_gui_context_t* ctx, gs_gui_rect_t r, gs_gui_id id, 
     }
 
     if (label) {gs_gui_draw_control_text(ctx, label, r, GS_GUI_COLOR_TEXT, opt);}
-    if (icon) {gs_gui_draw_icon(ctx, icon, r, ctx->style->colors[GS_GUI_COLOR_TEXT]);} 
+    // if (icon) {gs_gui_draw_icon(ctx, icon, r, ctx->style->colors[GS_GUI_COLOR_TEXT]);} 
 }
 
 GS_API_DECL void gs_editor_init()
 {
     // Initialize core
-    gs_editor_t* app = gs_engine_user_data(gs_editor_t); 
+    gs_editor_t* app = gs_user_data(gs_editor_t); 
     app->core = gs_core_new(); 
 
     // Register reflection for gs_editor
@@ -445,7 +445,7 @@ static void test_window(gs_gui_context_t *ctx)
             gs_snprintf(buf, 64, "%.2f, %.2f", win->rect.w, win->rect.h); gs_gui_label(ctx, buf);
         }
 
-        if (gs_gui_header_ex(ctx, "Test Buttons", 0x00)) 
+        if (gs_gui_header_ex(ctx, "Test Buttons", NULL, 0x00)) 
         {
             gs_gui_layout_row(ctx, 3, (int[]) { 120, 100, 100 }, 0);
             gs_gui_label(ctx, "Test buttons 1:");
@@ -462,7 +462,7 @@ static void test_window(gs_gui_context_t *ctx)
             {
                 gs_gui_container_t* cnt = gs_gui_get_current_container(ctx);
                 gs_gui_layout_row(ctx, 1, (int[]) { -1 }, 20);
-                gs_gui_text(ctx, "Close the text box.", 0);
+                gs_gui_text(ctx, "Close the text box.");
                 gs_gui_layout_row(ctx, 2, (int[]) { -200, -1 }, 20);
                 if (gs_gui_button(ctx, "Okay") || gs_gui_button(ctx, "Cancel"))
                 {
@@ -472,7 +472,7 @@ static void test_window(gs_gui_context_t *ctx)
             }
         }
 
-        if (gs_gui_header_ex(ctx, "Tree and Text", 0x00)) 
+        if (gs_gui_header_ex(ctx, "Tree and Text", NULL, 0x00)) 
         {
             gs_gui_layout_row(ctx, 2, (int[]) { 250, -1 }, 0);
             gs_gui_layout_begin_column(ctx);
@@ -514,11 +514,11 @@ static void test_window(gs_gui_context_t *ctx)
             gs_gui_layout_row(ctx, 1, (int[]) { -1 }, 0);
             gs_gui_text(ctx, "Lorem ipsum dolor sit amet, consectetur adipiscing "
                          "elit. Maecenas lacinia, sem eu lacinia molestie, mi risus faucibus "
-                         "ipsum, eu varius magna felis a nulla.", 1);
+                         "ipsum, eu varius magna felis a nulla.");
             gs_gui_layout_end_column(ctx);
         }
 
-        if (gs_gui_header_ex(ctx, "Background Color", 0x00)) 
+        if (gs_gui_header_ex(ctx, "Background Color", NULL, 0x00)) 
         {
             gs_gui_layout_row(ctx, 2, (int[]) { -78, -1 }, 74);
             gs_gui_layout_begin_column(ctx);
@@ -531,12 +531,12 @@ static void test_window(gs_gui_context_t *ctx)
             gs_gui_draw_rect(ctx, r, gs_color(bg[0], bg[1], bg[2], 255));
             char buf[32];
             gs_snprintf(buf, 32, "#%02X%02X%02X", (int) bg[0], (int) bg[1], (int) bg[2]);
-            gs_gui_draw_control_text(ctx, buf, r, GS_GUI_COLOR_TEXT, GS_GUI_OPT_ALIGNCENTER);
+            gs_gui_draw_control_text(ctx, buf, r, GS_GUI_COLOR_TEXT, GS_GUI_ALIGN_CENTER);
         }
 
-        if (gs_gui_header_ex(ctx, "Shapes", 0x00)) 
+        if (gs_gui_header_ex(ctx, "Shapes", NULL, 0x00)) 
         { 
-            gs_editor_t* app = gs_engine_user_data(gs_editor_t);
+            gs_editor_t* app = gs_user_data(gs_editor_t);
             gs_texture_t* tex = gs_asset_handle_get(&app->tex); 
             gs_texture_t* ntex = gs_asset_handle_get(&app->nine_tex); 
             gs_gui_container_t* cnt = gs_gui_get_current_container(ctx);
@@ -581,7 +581,7 @@ static void log_window(gs_gui_context_t* ctx)
         gs_gui_begin_panel_ex(ctx, "Panel", GS_GUI_OPT_NOSCROLL); 
         gs_gui_container_t* panel  = gs_gui_get_current_container(ctx);
         gs_gui_layout_row(ctx, 1, (int[]) { -1 }, -1);
-        gs_gui_text(ctx, logbuf, 0);
+        gs_gui_text(ctx, logbuf);
         gs_gui_end_panel(ctx);
         if (logbuf_updated) {
             // panel->scroll.y = panel->content_size.y;
@@ -604,17 +604,6 @@ static void log_window(gs_gui_context_t* ctx)
         gs_gui_end_window(ctx);
     } 
 }
-
-static int uint8_slider(gs_gui_context_t *ctx, unsigned char *value, int low, int high) {
-  static float tmp;
-  gs_gui_push_id(ctx, &value, sizeof(value));
-  tmp = *value;
-  int res = gs_gui_slider_ex(ctx, &tmp, low, high, 0, "%.0f", GS_GUI_OPT_ALIGNCENTER);
-  *value = tmp;
-  gs_gui_pop_id(ctx);
-  return res;
-}
-
 
 static void style_window(gs_gui_context_t *ctx) 
 {
@@ -645,10 +634,10 @@ static void style_window(gs_gui_context_t *ctx)
     for (int i = 0; colors[i].label; i++) 
     {
       gs_gui_label(ctx, colors[i].label);
-      uint8_slider(ctx, &ctx->style->colors[i].r, 0, 255);
-      uint8_slider(ctx, &ctx->style->colors[i].g, 0, 255);
-      uint8_slider(ctx, &ctx->style->colors[i].b, 0, 255);
-      uint8_slider(ctx, &ctx->style->colors[i].a, 0, 255);
+      uint8_slider(ctx, &ctx->style->colors[i].r, 0, 255, NULL, NULL);
+      uint8_slider(ctx, &ctx->style->colors[i].g, 0, 255, NULL, NULL);
+      uint8_slider(ctx, &ctx->style->colors[i].b, 0, 255, NULL, NULL);
+      uint8_slider(ctx, &ctx->style->colors[i].a, 0, 255, NULL, NULL);
       gs_gui_draw_rect(ctx, gs_gui_layout_next(ctx), ctx->style->colors[i]);
     } 
     gs_gui_end_window(ctx);
@@ -658,7 +647,7 @@ static void style_window(gs_gui_context_t *ctx)
 GS_API_DECL void gs_editor_update()
 {
     // Cache app/core pointers
-    gs_editor_t* app = gs_engine_user_data(gs_editor_t);
+    gs_editor_t* app = gs_user_data(gs_editor_t);
     gs_core_t* core = app->core;
     gs_command_buffer_t* cb = &core->cb;
     gs_immediate_draw_t* gsi = &core->gsi; 
@@ -682,7 +671,7 @@ GS_API_DECL void gs_editor_update()
     // Process input (closing window) 
     if (gs_platform_key_pressed(GS_KEYCODE_ESC)) gs_engine_quit(); 
 
-    gs_gui_begin(gsgui);
+    gs_gui_begin(gsgui, NULL);
 
     // Update entity manager
     gs_entities_update(em); 
@@ -693,7 +682,7 @@ GS_API_DECL void gs_editor_update()
     gs_vec2 ts = gs_v2(500.f, 500.f * 0.18f);
 
     // Render hello to screen
-    gsi_camera2D(gsi);
+    gsi_camera2D(gsi, fb.x, fb.y);
     gsi_text(gsi, (fb.x - td.x) * 0.5f, (fb.y - td.y) * 0.5f, "Project: gs_editor", NULL, false, 255, 255, 255, 255); 
     gsi_texture(gsi, tex->texture.hndl);
     gsi_rectvd(gsi, gs_v2((fb.x - ts.x) * 0.5f, (fb.y - ts.y) * 0.5f - td.y - 50.f), ts, gs_v2s(0.f), gs_v2s(1.f), GS_COLOR_WHITE, GS_GRAPHICS_PRIMITIVE_TRIANGLES);
@@ -752,7 +741,7 @@ GS_API_DECL void gs_editor_update()
     gs_gui_render(gsgui, cb);
 
     gs_timed_action(60, {
-        gs_println("frame: %.2f", gs_engine_subsystem(platform)->time.frame);
+        gs_println("frame: %.2f", gs_platform_frame_time());
     }); 
 
     // Submit command buffer for rendering
@@ -762,7 +751,7 @@ GS_API_DECL void gs_editor_update()
 
 GS_API_DECL void gs_editor_shutdown()
 {
-    gs_editor_t* app = gs_engine_user_data(gs_editor_t); 
+    gs_editor_t* app = gs_user_data(gs_editor_t); 
     gs_core_delete(app->core); 
 } 
         
@@ -770,8 +759,8 @@ GS_API_DECL gs_app_desc_t gs_editor_main(int32_t argc, char** argv)
 {
     return (gs_app_desc_t) 
     {
-        .window_width = 1200,
-        .window_height = 700,
+        .window.width = 1200,
+        .window.height = 700,
         .init = gs_editor_init,
         .update = gs_editor_update,
         .shutdown = gs_editor_shutdown,

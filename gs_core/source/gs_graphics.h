@@ -67,8 +67,8 @@ int32_t gs_quad_compare(const void* a, const void* b)
 typedef struct gs_quad_batch_t
 { 
     gs_dyn_array(gs_quad_t) quads;// Array of quads
-    gs_vbo vbo;                // Vertex buffer handle
-    gs_ibo ibo;                // Index buffer handle
+    gs_handle(gs_graphics_vertex_buffer_t) vbo;                // Vertex buffer handle
+    gs_handle(gs_graphics_index_buffer_t) ibo;                // Index buffer handle
     uint32_t material_hndl;    // Reference to a material asset
     uint32_t count;            // Total index buffer count for upload 
 } gs_quad_batch_t; 

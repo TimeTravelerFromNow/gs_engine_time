@@ -55,7 +55,7 @@ GS_API_DECL gs_token_t gs_lexer_gen_next_token(gs_lexer_t* lex)
 			case ')': {t.type = GS_TOKEN_RPAREN; lex->at++;} break;
 			case '<': {t.type = GS_TOKEN_LTHAN; lex->at++;} break;
 			case '>': {t.type = GS_TOKEN_GTHAN; lex->at++;} break;
-			case ';': {t.type = GS_TOKEN_SEMI_COLON; lex->at++;} break;
+			case ';': {t.type = GS_TOKEN_SEMICOLON; lex->at++;} break;
 			case ':': {t.type = GS_TOKEN_COLON; lex->at++;} break;
 			case ',': {t.type = GS_TOKEN_COMMA; lex->at++;} break;
 			case '=': {t.type = GS_TOKEN_EQUAL; lex->at++;} break;

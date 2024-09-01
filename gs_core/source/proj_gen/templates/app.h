@@ -29,7 +29,7 @@ GS_API_DECL void %APP_NAME%_shutdown();
 GS_API_DECL void %APP_NAME%_init()
 {
     // Initialize core
-    %APP_NAME%_t* app = gs_engine_user_data(%APP_NAME%_t); 
+    %APP_NAME%_t* app = gs_user_data(%APP_NAME%_t); 
     app->core = gs_core_new(); 
 
     // Register reflection for %APP_NAME%
@@ -42,7 +42,7 @@ GS_API_DECL void %APP_NAME%_init()
 GS_API_DECL void %APP_NAME%_update()
 {
     // Cache app/core pointers
-    %APP_NAME%_t* app = gs_engine_user_data(%APP_NAME%_t);
+    %APP_NAME%_t* app = gs_user_data(%APP_NAME%_t);
     gs_core_t* core = app->core;
     gs_command_buffer_t* cb = &core->cb;
     gs_immediate_draw_t* gsi = &core->gsi; 
@@ -77,7 +77,7 @@ GS_API_DECL void %APP_NAME%_update()
 
 GS_API_DECL void %APP_NAME%_shutdown()
 {
-    %APP_NAME%_t* app = gs_engine_user_data(%APP_NAME%_t); 
+    %APP_NAME%_t* app = gs_user_data(%APP_NAME%_t); 
     gs_core_delete(app->core); 
 } 
         

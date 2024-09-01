@@ -41,6 +41,7 @@
  */
 
 #define GS_IMPL
+#define GS_NO_SHORT_NAME
 #include <gs/gs.h>
 
 #define GS_IMMEDIATE_DRAW_IMPL

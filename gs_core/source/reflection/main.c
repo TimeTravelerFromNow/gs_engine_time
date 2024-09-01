@@ -569,7 +569,7 @@ void parse_struct_field(reflection_data_t* refl, meta_class_t* c, gs_lexer_t* le
 		memcpy(p.name, t.text, t.len);
 
 		// Require semi colon
-		if (!gs_lexer_find_next_token_type(lex, GS_TOKEN_SEMI_COLON)) gs_assert(false);
+		if (!gs_lexer_find_next_token_type(lex, GS_TOKEN_SEMICOLON)) gs_assert(false);
 
 		// Add to class properties
 		gs_dyn_array_push(c->properties, p);
@@ -577,7 +577,7 @@ void parse_struct_field(reflection_data_t* refl, meta_class_t* c, gs_lexer_t* le
     else
     {
 		// Move to the semicolon
-		gs_lexer_find_next_token_type(lex, GS_TOKEN_SEMI_COLON);
+		gs_lexer_find_next_token_type(lex, GS_TOKEN_SEMICOLON);
     }
 }
 
@@ -615,7 +615,7 @@ void parse_struct(reflection_data_t* refl, gs_lexer_t* lex)
 	}
 
 	// Parse to semi colon (if identifier found, store name)
-	while (lex->can_lex(lex) && t.type != GS_TOKEN_SEMI_COLON)
+	while (lex->can_lex(lex) && t.type != GS_TOKEN_SEMICOLON)
 	{
 		t = lex->next_token(lex);
 		switch (t.type)
@@ -674,7 +674,7 @@ void parse_enum(reflection_data_t* refl, gs_lexer_t* lex)
 	}
 
 	// Find semi colon
-	while (lex->can_lex(lex) && t.type != GS_TOKEN_SEMI_COLON)
+	while (lex->can_lex(lex) && t.type != GS_TOKEN_SEMICOLON)
 	{
 		t = lex->next_token(lex);
 		switch (t.type)
