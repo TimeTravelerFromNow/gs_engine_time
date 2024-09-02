@@ -402,7 +402,7 @@ GS_API_DECL gs_asset_handle_t gs_assets_import(gs_asset_manager_t* am, const cha
 	gs_transient_buffer(FINAL_PATH_TMP, GS_ASSET_STR_MAX);
 	gs_transient_buffer(FINAL_PATH, GS_ASSET_STR_MAX);
 	gs_snprintf(FINAL_PATH_TMP, GS_ASSET_STR_MAX, "%s/%s", am->root_path, QUAL_NAME);
-	gs_util_string_replace_delim(FINAL_PATH_TMP, (FINAL_PATH+1), GS_ASSET_STR_MAX, '.', '/');
+	gs_util_string_replace_delim(FINAL_PATH_TMP, (FINAL_PATH + 1), GS_ASSET_STR_MAX, '.', '/');
 	FINAL_PATH[0] = '.';
 
 	// Get file extension from registered mappings
@@ -790,7 +790,6 @@ GS_API_DECL void gs_asset_qualified_name(const char* src, char* dst, size_t sz)
 	{
 		// For each split, print
 		uint32_t c = 0;
-		gs_println("dst before %s", dst);
 		gs_for_range_i(gs_dyn_array_size(splits))
 		{
 			string_split_t* s = &splits[i];
@@ -801,7 +800,6 @@ GS_API_DECL void gs_asset_qualified_name(const char* src, char* dst, size_t sz)
 			memcpy((dst + c), TMP3, s->count);
 			c += s->count;
 		}
-		gs_println("dst after %s", dst);
 		// Need the last remainder of the string as well
 		gs_dyn_array_free(splits);
 	}
