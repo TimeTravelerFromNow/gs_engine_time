@@ -48,7 +48,7 @@
 #include <gs/util/gs_idraw.h> 
 
 #define GS_GUI_IMPL
-#include <gs/util/gs_gui.h>" 
+#include <gs/util/gs_gui.h>
 
 #define GS_GFXT_IMPL
 #include <gs/util/gs_gfxt.h>

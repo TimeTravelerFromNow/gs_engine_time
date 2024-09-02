@@ -54,7 +54,7 @@ GS_API_DECL void %APP_NAME%_update()
     const gs_vec2 ws = gs_platform_window_sizev(gs_platform_main_window()); 
 
     // Process input (closing window) 
-    if (gs_platform_key_pressed(GS_KEYCODE_ESC)) gs_engine_quit(); 
+    if (gs_platform_key_pressed(GS_KEYCODE_ESC)) gs_quit(); 
 
     // Update entity manager
     gs_entities_update(em); 
@@ -69,10 +69,10 @@ GS_API_DECL void %APP_NAME%_update()
     gsi_rectvd(gsi, gs_v2(150.f, 150.f), gs_v2(500.f, 500.f * 0.18f), gs_v2s(0.f), gs_v2s(1.f), GS_COLOR_WHITE, GS_GRAPHICS_PRIMITIVE_TRIANGLES);
 
     // Submit immediate draw render pass
-    gsi_render_pass_submit(gsi, cb, gs_color(10, 10, 10, 255));
+    gsi_renderpass_submit(gsi, cb, gs_color(10, 10, 10, 255));
 
     // Submit command buffer for rendering
-    gs_graphics_submit_command_buffer(cb); 
+    gs_graphics_command_buffer_submit(cb); 
 }
 
 GS_API_DECL void %APP_NAME%_shutdown()

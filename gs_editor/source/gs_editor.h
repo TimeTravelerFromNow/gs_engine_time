@@ -345,7 +345,7 @@ GS_API_DECL void gs_editor_init()
     app->rand = gs_rand_seed((uint64_t)time(NULL));
 
     // Add gui callback for button rendering
-    // app->core->gsgui.callbacks.button = gui_button_cb;
+    app->core->gsgui.callbacks.button = gui_button_cb;
 } 
 
 /*
@@ -419,11 +419,11 @@ static void write_log(char* logbuf, const char* text, bool* updated) {
 static void dockspace(gs_gui_context_t* ctx) 
 {
     int32_t opt = GS_GUI_OPT_NOCLIP | GS_GUI_OPT_NOFRAME | GS_GUI_OPT_FORCESETRECT | GS_GUI_OPT_NOTITLE | GS_GUI_OPT_DOCKSPACE | GS_GUI_OPT_FULLSCREEN | GS_GUI_OPT_NOMOVE | GS_GUI_OPT_NOBRINGTOFRONT | GS_GUI_OPT_NOFOCUS | GS_GUI_OPT_NORESIZE;
-    gs_gui_begin_window_ex(ctx, "Dockspace", gs_gui_rect(350, 40, 600, 500), opt);
+    gs_gui_window_begin_ex(ctx, "Dockspace", gs_gui_rect(350, 40, 600, 500), NULL, NULL, opt);
     {
         // Empty dockspace...
     }
-    gs_gui_end_window(ctx);
+    gs_gui_window_end(ctx);
 }
 
 static void test_window(gs_gui_context_t *ctx) 
@@ -432,7 +432,7 @@ static void test_window(gs_gui_context_t *ctx)
     static float bg[3] = {90, 95, 100};
 
     /* do window */
-    if (gs_gui_begin_window(ctx, "Demo", gs_gui_rect(40, 40, 300, 450)))
+    if (gs_gui_window_begin(ctx, "Demo", gs_gui_rect(40, 40, 300, 450)))
     {
         if (gs_gui_header(ctx, "Window Info")) 
         {
@@ -455,10 +455,10 @@ static void test_window(gs_gui_context_t *ctx)
             if (gs_gui_button(ctx, "Button 3")) { write_log(logbuf, "Pressed button 3", &logbuf_updated); }
             if (gs_gui_button(ctx, "Popup")) 
             { 
-                gs_gui_open_popup(ctx, "Test Popup"); 
+                gs_gui_popup_open(ctx, "Test Popup"); 
             }
             gs_vec2 ws = gs_platform_window_sizev(ctx->window_hndl);
-            if (gs_gui_begin_popup_ex( ctx, "Test Popup", gs_gui_rect((ws.x - 400) / 2.f, (ws.y - 100) / 2.f, 400, 100), GS_GUI_OPT_NORESIZE | GS_GUI_OPT_FORCESETRECT | GS_GUI_OPT_NOTITLE)) 
+            if (gs_gui_popup_begin_ex( ctx, "Test Popup", gs_gui_rect((ws.x - 400) / 2.f, (ws.y - 100) / 2.f, 400, 100), NULL, GS_GUI_OPT_NORESIZE | GS_GUI_OPT_FORCESETRECT | GS_GUI_OPT_NOTITLE)) 
             {
                 gs_gui_container_t* cnt = gs_gui_get_current_container(ctx);
                 gs_gui_layout_row(ctx, 1, (int[]) { -1 }, 20);
@@ -468,65 +468,65 @@ static void test_window(gs_gui_context_t *ctx)
                 {
                     cnt->open = 0;
                 } 
-                gs_gui_end_popup(ctx);
+                gs_gui_popup_end(ctx);
             }
         }
 
         if (gs_gui_header_ex(ctx, "Tree and Text", NULL, 0x00)) 
         {
             gs_gui_layout_row(ctx, 2, (int[]) { 250, -1 }, 0);
-            gs_gui_layout_begin_column(ctx);
-            if (gs_gui_begin_treenode(ctx, "Test 1")) {
-                if (gs_gui_begin_treenode(ctx, "Test 1a")) {
+            gs_gui_layout_column_begin(ctx);
+            if (gs_gui_treenode_begin(ctx, "Test 1")) {
+                if (gs_gui_treenode_begin(ctx, "Test 1a")) {
                     gs_gui_label(ctx, "Hello");
                     gs_gui_label(ctx, "world");
-                    gs_gui_end_treenode(ctx);
+                    gs_gui_treenode_end(ctx);
                 }
-                if (gs_gui_begin_treenode(ctx, "Test 1b")) {
+                if (gs_gui_treenode_begin(ctx, "Test 1b")) {
                     if (gs_gui_button(ctx, "Button 1")) { write_log(logbuf, "Pressed button 1", &logbuf_updated); }
                     if (gs_gui_button(ctx, "Button 2")) { write_log(logbuf, "Pressed button 2", &logbuf_updated); }
-                    gs_gui_end_treenode(ctx);
+                    gs_gui_treenode_end(ctx);
                 }
-                gs_gui_end_treenode(ctx);
+                gs_gui_treenode_end(ctx);
             }
 
-            if (gs_gui_begin_treenode(ctx, "Test 2")) 
+            if (gs_gui_treenode_begin(ctx, "Test 2")) 
             {
                 gs_gui_layout_row(ctx, 3, (int[]) { 65, 65, 65 }, 0);
                 if (gs_gui_button(ctx, "Button 3")) { write_log(logbuf, "Pressed button 3", &logbuf_updated); }
                 if (gs_gui_button(ctx, "Button 4")) { write_log(logbuf, "Pressed button 4", &logbuf_updated); }
                 if (gs_gui_button(ctx, "Button 5")) { write_log(logbuf, "Pressed button 5", &logbuf_updated); }
                 if (gs_gui_button(ctx, "Button 6")) { write_log(logbuf, "Pressed button 6", &logbuf_updated); }
-                gs_gui_end_treenode(ctx);
+                gs_gui_treenode_end(ctx);
             }
 
-            if (gs_gui_begin_treenode(ctx, "Test 3")) 
+            if (gs_gui_treenode_begin(ctx, "Test 3")) 
             {
                 static int checks[3] = { 1, 0, 1 };
                 gs_gui_checkbox(ctx, "Checkbox 1", &checks[0]);
                 gs_gui_checkbox(ctx, "Checkbox 2", &checks[1]);
                 gs_gui_checkbox(ctx, "Checkbox 3", &checks[2]);
-                gs_gui_end_treenode(ctx);
+                gs_gui_treenode_end(ctx);
             }
-            gs_gui_layout_end_column(ctx);
+            gs_gui_layout_column_end(ctx);
 
-            gs_gui_layout_begin_column(ctx);
+            gs_gui_layout_column_begin(ctx);
             gs_gui_layout_row(ctx, 1, (int[]) { -1 }, 0);
             gs_gui_text(ctx, "Lorem ipsum dolor sit amet, consectetur adipiscing "
                          "elit. Maecenas lacinia, sem eu lacinia molestie, mi risus faucibus "
                          "ipsum, eu varius magna felis a nulla.");
-            gs_gui_layout_end_column(ctx);
+            gs_gui_layout_column_end(ctx);
         }
 
         if (gs_gui_header_ex(ctx, "Background Color", NULL, 0x00)) 
         {
             gs_gui_layout_row(ctx, 2, (int[]) { -78, -1 }, 74);
-            gs_gui_layout_begin_column(ctx);
+            gs_gui_layout_column_begin(ctx);
             gs_gui_layout_row(ctx, 2, (int[]) { 46, -1 }, 0);
             gs_gui_label(ctx, "Red:");   gs_gui_slider(ctx, &bg[0], 0, 255);
             gs_gui_label(ctx, "Green:"); gs_gui_slider(ctx, &bg[1], 0, 255);
             gs_gui_label(ctx, "Blue:");  gs_gui_slider(ctx, &bg[2], 0, 255);
-            gs_gui_layout_end_column(ctx);
+            gs_gui_layout_column_end(ctx);
             gs_gui_rect_t r = gs_gui_layout_next(ctx);
             gs_gui_draw_rect(ctx, r, gs_color(bg[0], bg[1], bg[2], 255));
             char buf[32];
@@ -542,7 +542,7 @@ static void test_window(gs_gui_context_t *ctx)
             gs_gui_container_t* cnt = gs_gui_get_current_container(ctx);
 
             gs_gui_layout_row(ctx, 1, (int[]) { -1 }, 400);
-            gs_gui_begin_panel_ex(ctx, "!panel", GS_GUI_OPT_NOSCROLL); 
+            gs_gui_panel_begin_ex(ctx, "!panel", NULL, GS_GUI_OPT_NOSCROLL); 
             {
                 gs_gui_layout_row(ctx, 4, (int[]) { 20, 10, 10, -1 }, 0);
 
@@ -565,24 +565,24 @@ static void test_window(gs_gui_context_t *ctx)
                 float rh = h + _t * (float)s * 0.2f;
                 gs_gui_draw_nine_rect(ctx, ntex->texture.hndl, gs_gui_rect(next.x, next.y + 40.f, (uint32_t)rw, (uint32_t)rh), gs_v2s(0.f), gs_v2s(1.f), m, m, m, m, GS_COLOR_WHITE);
             }
-            gs_gui_end_panel(ctx);
+            gs_gui_panel_end(ctx);
         }
 
-        gs_gui_end_window(ctx);
+        gs_gui_window_end(ctx);
     }
 }
 
 static void log_window(gs_gui_context_t* ctx) 
 {
-    if (gs_gui_begin_window_ex(ctx, "Log Window", gs_gui_rect(350, 40, 300, 200), GS_GUI_OPT_NOSCROLL)) 
+    if (gs_gui_window_begin_ex(ctx, "Log Window", gs_gui_rect(350, 40, 300, 200), NULL, NULL, GS_GUI_OPT_NOSCROLL))
     { 
         gs_gui_container_t* cnt = gs_gui_get_current_container(ctx);
         gs_gui_layout_row(ctx, 1, (int[]) { -1 }, gs_max(cnt->rect.h - 80, 80));
-        gs_gui_begin_panel_ex(ctx, "Panel", GS_GUI_OPT_NOSCROLL); 
+        gs_gui_panel_begin_ex(ctx, "Panel", NULL, GS_GUI_OPT_NOSCROLL); 
         gs_gui_container_t* panel  = gs_gui_get_current_container(ctx);
         gs_gui_layout_row(ctx, 1, (int[]) { -1 }, -1);
         gs_gui_text(ctx, logbuf);
-        gs_gui_end_panel(ctx);
+        gs_gui_panel_end(ctx);
         if (logbuf_updated) {
             // panel->scroll.y = panel->content_size.y;
             logbuf_updated = 0;
@@ -601,7 +601,7 @@ static void log_window(gs_gui_context_t* ctx)
             write_log(logbuf, buf, &logbuf_updated);
             buf[0] = '\0';
         }
-        gs_gui_end_window(ctx);
+        gs_gui_window_end(ctx);
     } 
 }
 
@@ -627,7 +627,7 @@ static void style_window(gs_gui_context_t *ctx)
     { NULL }
   };
 
-  if (gs_gui_begin_window(ctx, "Style Editor", gs_gui_rect(350, 250, 300, 240))) 
+  if (gs_gui_window_begin(ctx, "Style Editor", gs_gui_rect(350, 250, 300, 240))) 
   {
     int sw = gs_gui_get_current_container(ctx)->body.w * 0.14;
     gs_gui_layout_row(ctx, 6, (int[]) { 80, sw, sw, sw, sw, -1 }, 0);
@@ -640,7 +640,7 @@ static void style_window(gs_gui_context_t *ctx)
       uint8_slider(ctx, &ctx->style->colors[i].a, 0, 255, NULL, NULL);
       gs_gui_draw_rect(ctx, gs_gui_layout_next(ctx), ctx->style->colors[i]);
     } 
-    gs_gui_end_window(ctx);
+    gs_gui_window_end(ctx);
   }
 }
 
@@ -669,7 +669,7 @@ GS_API_DECL void gs_editor_update()
     const gs_vec2 ws = gs_platform_window_sizev(gs_platform_main_window()); 
 
     // Process input (closing window) 
-    if (gs_platform_key_pressed(GS_KEYCODE_ESC)) gs_engine_quit(); 
+    if (gs_platform_key_pressed(GS_KEYCODE_ESC)) gs_quit(); 
 
     gs_gui_begin(gsgui, NULL);
 
@@ -688,7 +688,7 @@ GS_API_DECL void gs_editor_update()
     gsi_rectvd(gsi, gs_v2((fb.x - ts.x) * 0.5f, (fb.y - ts.y) * 0.5f - td.y - 50.f), ts, gs_v2s(0.f), gs_v2s(1.f), GS_COLOR_WHITE, GS_GRAPHICS_PRIMITIVE_TRIANGLES);
 
     // Submit immediate draw render pass
-    gsi_render_pass_submit(gsi, cb, gs_color(10, 10, 10, 255)); 
+    gsi_renderpass_submit(gsi, cb, (gs_vec4){0.,0., ws.x, ws.y}, gs_color(10, 10, 10, 255)); 
 
 #define WIN_CNT  10
 
@@ -712,7 +712,7 @@ GS_API_DECL void gs_editor_update()
             r.h = 300.f;
         #endif
 
-		if (gs_gui_begin_window(gsgui, TMP, r))
+		if (gs_gui_window_begin(gsgui, TMP, r))
 		{ 
             static char BUF[256] = {0};
             if (gs_gui_textbox(gsgui, BUF, 256))
@@ -728,7 +728,7 @@ GS_API_DECL void gs_editor_update()
                 }
             }
 
-            gs_gui_end_window(gsgui);
+            gs_gui_window_end(gsgui);
 		}
 	} 
 
@@ -745,7 +745,7 @@ GS_API_DECL void gs_editor_update()
     }); 
 
     // Submit command buffer for rendering
-    gs_graphics_submit_command_buffer(cb); 
+    gs_graphics_command_buffer_submit(cb); 
 }
 
 
